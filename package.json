@@ -1,0 +1,30 @@
+{
+  "name": "proctorguard-companion-agent",
+  "version": "1.0.0",
+  "description": "ProctorGuard OS-Level Desktop Lockdown Container and Native Companion Auditor",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "node test-companion.js",
+    "compile-native": "node-gyp rebuild",
+    "build": "electron-builder"
+  },
+  "keywords": [
+    "proctorguard",
+    "anti-cheat",
+    "lockdown-browser",
+    "exam-integrity",
+    "electron",
+    "native-auditor"
+  ],
+  "author": "ProctorGuard Security Team",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "electron": "^31.6.0"
+  },
+  "gypfile": true
+}
