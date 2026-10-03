@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProctorGuard Desktop Lockdown Container</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Native Security HUD -->
+  <header class="companion-hud">
+    <div class="hud-left">
+      <div class="brand">
+        <svg class="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span class="brand-title">ProctorGuard <span class="badge-native">DESKTOP LOCKDOWN</span></span>
+      </div>
+
+      <div class="security-status" id="lockdownStatusBadge">
+        <span class="status-dot green"></span>
+        <span class="status-text" id="statusLabel">ACTIVE LOCKDOWN</span>
+      </div>
+    </div>
+
+    <!-- Live Telemetry Readout -->
+    <div class="hud-center">
+      <div class="telemetry-pill" id="pillDisplays" title="Monitors connected to system">
+        <span class="pill-label">DISPLAYS</span>
+        <span class="pill-val" id="valDisplays">1 (OK)</span>
+      </div>
+
+      <div class="telemetry-pill" id="pillProcesses" title="Background processes scanned against blacklist">
+        <span class="pill-label">PROCESSES</span>
+        <span class="pill-val" id="valProcesses">Scanning...</span>
+      </div>
+
+      <div class="telemetry-pill" id="pillModules" title="Loaded DLLs checked for injection hooks">
+        <span class="pill-label">MODULES</span>
+        <span class="pill-val" id="valModules">Clean</span>
+      </div>
+
+      <div class="telemetry-pill" id="pillEngine" title="Active native detection engine">
+        <span class="pill-label">ENGINE</span>
+        <span class="pill-val" id="valEngine">Win32 Native</span>
+      </div>
+    </div>
+
+    <div class="hud-right">
+      <div class="ws-indicator" id="wsIndicator" title="WebSocket telemetry connection to backend">
+        <span class="status-dot green"></span>
+        <span class="ws-text" id="wsLabel">LINK ACTIVE</span>
+      </div>
+
+      <button class="btn-hud secondary" id="btnRescan" title="Force immediate OS telemetry audit">
+        ↻ Audit Now
+      </button>
+
+      <button class="btn-hud danger" id="btnEmergencyExit" title="Proctor administrative exit">
+        Exit (Proctor)
+      </button>
+    </div>
+  </header>
+
+  <!-- Threat Ticker Banner (Hidden by default, shown if threat found) -->
+  <div class="threat-ticker" id="threatTicker" style="display: none;">
+    <div class="threat-content">
+      <span class="threat-icon">⚠️</span>
+      <span class="threat-msg" id="threatMsg">OS THREAT DETECTED: Unauthorized background software running.</span>
+    </div>
+  </div>
+
+  <!-- Main Exam Viewport (Embedded secure web container) -->
+  <main class="exam-container">
+    <iframe 
+      id="examFrame" 
+      class="exam-frame" 
+      src="about:blank"
+      allow="camera; microphone; display-capture; fullscreen"
+    ></iframe>
+  </main>
+
+  <!-- Fullscreen Remote Lockout Curtain (Triggered by proctor LOCK or max warnings) -->
+  <div class="lockout-curtain" id="lockoutCurtain" style="display: none;">
+    <div class="lockout-card">
+      <div class="lockout-icon">🔒</div>
+      <h2 class="lockout-title">EXAMINATION INTERFACE LOCKED</h2>
+      <p class="lockout-reason" id="lockoutReason">An integrity violation was detected by ProctorGuard or your examination administrator has manually locked your workstation.</p>
+      
+      <div class="lockout-guidance">
+        <p>Remain seated facing your webcam. The proctoring review team has been notified with high priority. Do not attempt to disconnect hardware or power down.</p>
+      </div>
+
+      <div class="lockout-meta">
+        <div>Session ID: <span id="lockSessionId">--</span></div>
+        <div>Candidate ID: <span id="lockCandidateId">--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Exit Modal (Proctor Auth) -->
+  <div class="modal-backdrop" id="exitModal" style="display: none;">
+    <div class="modal-dialog">
+      <h3>Administrative Emergency Exit</h3>
+      <p>Enter the Proctor Master Key to terminate the desktop lockdown container.</p>
+      <input type="password" id="exitPinInput" placeholder="Master Key (default: proctor99)" autocomplete="off">
+      <div class="modal-actions">
+        <button class="btn-hud secondary" id="btnCancelExit">Cancel</button>
+        <button class="btn-hud danger" id="btnConfirmExit">Authorize Exit</button>
+      </div>
+      <div class="modal-error" id="exitErrorMsg"></div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
